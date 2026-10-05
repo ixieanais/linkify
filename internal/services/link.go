@@ -22,10 +22,12 @@ type CreateLinkInput struct {
 }
 
 type UpdateLinkInput struct {
-	ID       uuid.UUID
-	URL      string
-	Image    string
-	IsActive *bool
+	ID        uuid.UUID
+	UserID    uuid.UUID
+	ProfileID uuid.UUID
+	URL       string
+	Image     string
+	IsActive  *bool
 }
 
 func NewLinkService(repo *repositories.LinkRepository) *LinkService {
@@ -73,6 +75,6 @@ func (s *LinkService) Update(c context.Context, input UpdateLinkInput) error {
 	return s.repo.Update(c, link)
 }
 
-func (s *LinkService) Delete(c context.Context, id uuid.UUID) error {
-	return s.repo.Delete(c, id)
+func (s *LinkService) Delete(c context.Context, id, userID, profileID uuid.UUID) error {
+	return s.repo.Delete(c, id, userID, profileID)
 }
