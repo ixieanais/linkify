@@ -34,7 +34,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/linkify_internal_dto.UserRequest"
+                            "$ref": "#/definitions/dto.UserRequest"
                         }
                     }
                 ],
@@ -60,79 +60,10 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/linkify_internal_dto.UserRequest"
+                            "$ref": "#/definitions/dto.UserRequest"
                         }
                     }
                 ],
-                "responses": {}
-            }
-        },
-        "/blocks/": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "blocks"
-                ],
-                "summary": "Get blocks",
-                "responses": {}
-            },
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "blocks"
-                ],
-                "summary": "Create block",
-                "responses": {}
-            }
-        },
-        "/blocks/{id}/": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "blocks"
-                ],
-                "summary": "Get block",
-                "responses": {}
-            },
-            "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "blocks"
-                ],
-                "summary": "Update block",
-                "responses": {}
-            },
-            "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "blocks"
-                ],
-                "summary": "Delete block",
                 "responses": {}
             }
         },
@@ -178,7 +109,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/linkify_internal_dto.ProfileRequest"
+                            "$ref": "#/definitions/dto.ProfileRequest"
                         }
                     }
                 ],
@@ -186,7 +117,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/linkify_internal_dto.ProfileResponse"
+                            "$ref": "#/definitions/dto.ProfileResponse"
                         }
                     }
                 }
@@ -218,7 +149,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/linkify_internal_dto.ProfileResponse"
+                            "$ref": "#/definitions/dto.ProfileResponse"
                         }
                     }
                 }
@@ -254,7 +185,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/linkify_internal_dto.ProfileRequest"
+                            "$ref": "#/definitions/dto.ProfileRequest"
                         }
                     }
                 ],
@@ -282,6 +213,211 @@ const docTemplate = `{
                         "format": "uuid",
                         "description": "Profile ID",
                         "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/profiles/{id}/blocks/": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "blocks"
+                ],
+                "summary": "Get blocks",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Profile ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BlockResponse"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "blocks"
+                ],
+                "summary": "Create block",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Profile ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Block Creation Details",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.BlockRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BlockResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/profiles/{id}/blocks/{blockId}/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "blocks"
+                ],
+                "summary": "Get block",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Profile ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Block ID",
+                        "name": "blockId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BlockResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "blocks"
+                ],
+                "summary": "Update block",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Profile ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Block ID",
+                        "name": "blockId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Block Updation Details",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.BlockRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "blocks"
+                ],
+                "summary": "Delete block",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Profile ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Block ID",
+                        "name": "blockId",
                         "in": "path",
                         "required": true
                     }
@@ -317,7 +453,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/linkify_internal_dto.LinkResponse"
+                                "$ref": "#/definitions/dto.LinkResponse"
                             }
                         }
                     }
@@ -354,7 +490,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/linkify_internal_dto.LinkRequest"
+                            "$ref": "#/definitions/dto.LinkRequest"
                         }
                     }
                 ],
@@ -362,7 +498,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/linkify_internal_dto.LinkResponse"
+                            "$ref": "#/definitions/dto.LinkResponse"
                         }
                     }
                 }
@@ -407,7 +543,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/linkify_internal_dto.LinkResponse"
+                            "$ref": "#/definitions/dto.LinkResponse"
                         }
                     }
                 }
@@ -451,7 +587,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/linkify_internal_dto.LinkRequest"
+                            "$ref": "#/definitions/dto.LinkRequest"
                         }
                     }
                 ],
@@ -517,7 +653,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/linkify_internal_dto.UserResponse"
+                            "$ref": "#/definitions/dto.UserResponse"
                         }
                     }
                 }
@@ -545,7 +681,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/linkify_internal_dto.UserRequest"
+                            "$ref": "#/definitions/dto.UserRequest"
                         }
                     }
                 ],
@@ -572,7 +708,62 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "linkify_internal_dto.LinkRequest": {
+        "dto.BlockRequest": {
+            "type": "object",
+            "properties": {
+                "image": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.BlockResponse": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.LinkRequest": {
             "type": "object",
             "properties": {
                 "image": {
@@ -586,7 +777,7 @@ const docTemplate = `{
                 }
             }
         },
-        "linkify_internal_dto.LinkResponse": {
+        "dto.LinkResponse": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -609,7 +800,7 @@ const docTemplate = `{
                 }
             }
         },
-        "linkify_internal_dto.ProfileRequest": {
+        "dto.ProfileRequest": {
             "type": "object",
             "properties": {
                 "avatar_url": {
@@ -626,7 +817,7 @@ const docTemplate = `{
                 }
             }
         },
-        "linkify_internal_dto.ProfileResponse": {
+        "dto.ProfileResponse": {
             "type": "object",
             "properties": {
                 "avatar_url": {
@@ -652,7 +843,7 @@ const docTemplate = `{
                 }
             }
         },
-        "linkify_internal_dto.UserRequest": {
+        "dto.UserRequest": {
             "type": "object",
             "required": [
                 "email",
@@ -668,7 +859,7 @@ const docTemplate = `{
                 }
             }
         },
-        "linkify_internal_dto.UserResponse": {
+        "dto.UserResponse": {
             "type": "object",
             "properties": {
                 "createdAt": {

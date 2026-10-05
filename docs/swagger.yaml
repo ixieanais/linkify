@@ -1,5 +1,41 @@
 definitions:
-  linkify_internal_dto.LinkRequest:
+  dto.BlockRequest:
+    properties:
+      image:
+        type: string
+      is_active:
+        type: boolean
+      text:
+        type: string
+      title:
+        type: string
+      type:
+        type: string
+      url:
+        type: string
+    type: object
+  dto.BlockResponse:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      image:
+        type: string
+      is_active:
+        type: boolean
+      text:
+        type: string
+      title:
+        type: string
+      type:
+        type: string
+      updatedAt:
+        type: string
+      url:
+        type: string
+    type: object
+  dto.LinkRequest:
     properties:
       image:
         type: string
@@ -8,7 +44,7 @@ definitions:
       url:
         type: string
     type: object
-  linkify_internal_dto.LinkResponse:
+  dto.LinkResponse:
     properties:
       createdAt:
         type: string
@@ -23,7 +59,7 @@ definitions:
       url:
         type: string
     type: object
-  linkify_internal_dto.ProfileRequest:
+  dto.ProfileRequest:
     properties:
       avatar_url:
         type: string
@@ -34,7 +70,7 @@ definitions:
       username:
         type: string
     type: object
-  linkify_internal_dto.ProfileResponse:
+  dto.ProfileResponse:
     properties:
       avatar_url:
         type: string
@@ -51,7 +87,7 @@ definitions:
       username:
         type: string
     type: object
-  linkify_internal_dto.UserRequest:
+  dto.UserRequest:
     properties:
       email:
         type: string
@@ -62,7 +98,7 @@ definitions:
     - email
     - password
     type: object
-  linkify_internal_dto.UserResponse:
+  dto.UserResponse:
     properties:
       createdAt:
         type: string
@@ -89,7 +125,7 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/linkify_internal_dto.UserRequest'
+          $ref: '#/definitions/dto.UserRequest'
       produces:
       - application/json
       responses: {}
@@ -106,60 +142,13 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/linkify_internal_dto.UserRequest'
+          $ref: '#/definitions/dto.UserRequest'
       produces:
       - application/json
       responses: {}
       summary: Signup
       tags:
       - auth
-  /blocks/:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses: {}
-      summary: Get blocks
-      tags:
-      - blocks
-    post:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses: {}
-      summary: Create block
-      tags:
-      - blocks
-  /blocks/{id}/:
-    delete:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses: {}
-      summary: Delete block
-      tags:
-      - blocks
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses: {}
-      summary: Get block
-      tags:
-      - blocks
-    put:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses: {}
-      summary: Update block
-      tags:
-      - blocks
   /profiles/:
     get:
       consumes:
@@ -181,14 +170,14 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/linkify_internal_dto.ProfileRequest'
+          $ref: '#/definitions/dto.ProfileRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/linkify_internal_dto.ProfileResponse'
+            $ref: '#/definitions/dto.ProfileResponse'
       security:
       - ApiKeyAuth: []
       summary: Create profile
@@ -229,7 +218,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/linkify_internal_dto.ProfileResponse'
+            $ref: '#/definitions/dto.ProfileResponse'
       summary: Get profile
       tags:
       - profiles
@@ -248,7 +237,7 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/linkify_internal_dto.ProfileRequest'
+          $ref: '#/definitions/dto.ProfileRequest'
       produces:
       - application/json
       responses: {}
@@ -257,6 +246,140 @@ paths:
       summary: Update profile
       tags:
       - profiles
+  /profiles/{id}/blocks/:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Profile ID
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.BlockResponse'
+            type: array
+      summary: Get blocks
+      tags:
+      - blocks
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Profile ID
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Block Creation Details
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dto.BlockRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.BlockResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create block
+      tags:
+      - blocks
+  /profiles/{id}/blocks/{blockId}/:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Profile ID
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Block ID
+        format: uuid
+        in: path
+        name: blockId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Delete block
+      tags:
+      - blocks
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Profile ID
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Block ID
+        format: uuid
+        in: path
+        name: blockId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.BlockResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get block
+      tags:
+      - blocks
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Profile ID
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Block ID
+        format: uuid
+        in: path
+        name: blockId
+        required: true
+        type: string
+      - description: Block Updation Details
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dto.BlockRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Update block
+      tags:
+      - blocks
   /profiles/{id}/links/:
     get:
       consumes:
@@ -275,7 +398,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/linkify_internal_dto.LinkResponse'
+              $ref: '#/definitions/dto.LinkResponse'
             type: array
       summary: Get links
       tags:
@@ -295,14 +418,14 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/linkify_internal_dto.LinkRequest'
+          $ref: '#/definitions/dto.LinkRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/linkify_internal_dto.LinkResponse'
+            $ref: '#/definitions/dto.LinkResponse'
       security:
       - ApiKeyAuth: []
       summary: Create link
@@ -331,7 +454,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/linkify_internal_dto.LinkResponse'
+            $ref: '#/definitions/dto.LinkResponse'
       security:
       - ApiKeyAuth: []
       summary: Get link
@@ -358,7 +481,7 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/linkify_internal_dto.LinkRequest'
+          $ref: '#/definitions/dto.LinkRequest'
       produces:
       - application/json
       responses: {}
@@ -413,7 +536,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/linkify_internal_dto.UserResponse'
+            $ref: '#/definitions/dto.UserResponse'
       security:
       - ApiKeyAuth: []
       summary: Get user
@@ -428,7 +551,7 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/linkify_internal_dto.UserRequest'
+          $ref: '#/definitions/dto.UserRequest'
       produces:
       - application/json
       responses: {}
