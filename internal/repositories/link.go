@@ -50,8 +50,8 @@ func (r *LinkRepository) Update(c context.Context, link *models.Link) error {
 	return nil
 }
 
-func (r *LinkRepository) Delete(c context.Context, id uuid.UUID) error {
-	result := r.db.WithContext(c).Delete(&models.Link{}, "id = ?", id)
+func (r *LinkRepository) Delete(c context.Context, id, userID, profileID uuid.UUID) error {
+	result := r.db.WithContext(c).Delete(&models.Link{}, "id = ? AND user_id = ? AND profile_id = ?", id, userID, profileID)
 
 	if result.Error != nil {
 		return result.Error
