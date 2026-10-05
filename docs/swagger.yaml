@@ -1,0 +1,445 @@
+definitions:
+  linkify_internal_dto.LinkRequest:
+    properties:
+      image:
+        type: string
+      is_active:
+        type: boolean
+      url:
+        type: string
+    type: object
+  linkify_internal_dto.LinkResponse:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      image:
+        type: string
+      is_active:
+        type: boolean
+      updatedAt:
+        type: string
+      url:
+        type: string
+    type: object
+  linkify_internal_dto.ProfileRequest:
+    properties:
+      avatar_url:
+        type: string
+      bio:
+        type: string
+      url:
+        type: string
+      username:
+        type: string
+    type: object
+  linkify_internal_dto.ProfileResponse:
+    properties:
+      avatar_url:
+        type: string
+      bio:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      updatedAt:
+        type: string
+      url:
+        type: string
+      username:
+        type: string
+    type: object
+  linkify_internal_dto.UserRequest:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  linkify_internal_dto.UserResponse:
+    properties:
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  title: Linkify API
+  version: "1.0"
+paths:
+  /auth/login/:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Authentication Details
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/linkify_internal_dto.UserRequest'
+      produces:
+      - application/json
+      responses: {}
+      summary: Login
+      tags:
+      - auth
+  /auth/signup/:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Registration Details
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/linkify_internal_dto.UserRequest'
+      produces:
+      - application/json
+      responses: {}
+      summary: Signup
+      tags:
+      - auth
+  /blocks/:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses: {}
+      summary: Get blocks
+      tags:
+      - blocks
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses: {}
+      summary: Create block
+      tags:
+      - blocks
+  /blocks/{id}/:
+    delete:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses: {}
+      summary: Delete block
+      tags:
+      - blocks
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses: {}
+      summary: Get block
+      tags:
+      - blocks
+    put:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses: {}
+      summary: Update block
+      tags:
+      - blocks
+  /profiles/:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Get profiles
+      tags:
+      - profiles
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Creation Details
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/linkify_internal_dto.ProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/linkify_internal_dto.ProfileResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create profile
+      tags:
+      - profiles
+  /profiles/{id}/:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Profile ID
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Delete profile
+      tags:
+      - profiles
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Profile ID
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/linkify_internal_dto.ProfileResponse'
+      summary: Get profile
+      tags:
+      - profiles
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Profile ID
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Profile Updation Details
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/linkify_internal_dto.ProfileRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Update profile
+      tags:
+      - profiles
+  /profiles/{id}/links/:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Profile ID
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/linkify_internal_dto.LinkResponse'
+            type: array
+      summary: Get links
+      tags:
+      - links
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Profile ID
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Profile Creation Details
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/linkify_internal_dto.LinkRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/linkify_internal_dto.LinkResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create link
+      tags:
+      - links
+  /profiles/{id}/links/{linkId}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Profile ID
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Link ID
+        format: uuid
+        in: path
+        name: linkId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/linkify_internal_dto.LinkResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get link
+      tags:
+      - links
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Profile ID
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Link ID
+        format: uuid
+        in: path
+        name: linkId
+        required: true
+        type: string
+      - description: Link Updation Details
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/linkify_internal_dto.LinkRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Update link
+      tags:
+      - links
+  /profiles/{id}/links/{linkId}/:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Profile ID
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Link ID
+        format: uuid
+        in: path
+        name: linkId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Delete link
+      tags:
+      - links
+  /users/me/:
+    delete:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Delete User
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/linkify_internal_dto.UserResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Updation Details
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/linkify_internal_dto.UserRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Update User
+      tags:
+      - users
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
