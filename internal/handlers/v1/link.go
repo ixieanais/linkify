@@ -210,6 +210,67 @@ func (h *LinkHandler) Get(c *gin.Context) {
 //	@Security	ApiKeyAuth
 //	@Router		/profiles/{id}/links/{linkId} [put]
 func (h *LinkHandler) Update(c *gin.Context) {
+	rawUserID, exists := c.Get("userID")
+	if !exists {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"detail": "user id not found in context",
+		})
+	}
+
+	userID, err := uuidutil.ParseUUID(rawUserID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"detail": err.Error(),
+		})
+	}
+
+	rawProfileID := c.Param("id")
+	profileID, err := uuid.Parse(rawProfileID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"detail": "invalid profile id type",
+		})
+	}
+
+	rawLinkID := c.Param("lid")
+	linkID, err := uuid.Parse(rawLinkID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"detail": "invalid link id type",
+		})
+	}
+
+	var req dto.LinkRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
+			"detail": err.Error(),
+		})
+	}
+
+	input := services.UpdateLinkInput{
+		ID:        linkID,
+		UserID:    userID,
+		ProfileID: profileID,
+		URL:       req.URL,
+		Image:     req.Image,
+		IsActive:  req.IsActive,
+	}
+
+	if err := h.service.Update(c, input); err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+				"detail": "link not found",
+			})
+		}
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"detail": err.Error(),
+		})
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"detail": "edited",
+	})
 }
 
 // Delete godoc
@@ -223,6 +284,50 @@ func (h *LinkHandler) Update(c *gin.Context) {
 //	@Security	ApiKeyAuth
 //	@Router		/profiles/{id}/links/{linkId}/ [delete]
 func (h *LinkHandler) Delete(c *gin.Context) {
+	rawUserID, exists := c.Get("userID")
+	if !exists {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"detail": "user id not found in context",
+		})
+	}
+
+	userID, err := uuidutil.ParseUUID(rawUserID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"detail": err.Error(),
+		})
+	}
+
+	rawProfileID := c.Param("id")
+	profileID, err := uuid.Parse(rawProfileID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"detail": "invalid profile id type",
+		})
+	}
+
+	rawLinkID := c.Param("lid")
+	linkID, err := uuid.Parse(rawLinkID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"detail": "invalid link id type",
+		})
+	}
+
+	if err := h.service.Delete(c, linkID, userID, profileID); err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+				"detail": "link not found",
+			})
+		}
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"detail": err.Error(),
+		})
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"detail": "deleted",
+	})
 }
 
 func RegisterLinkRoutes(r *gin.RouterGroup, repo *repositories.LinkRepository) {
