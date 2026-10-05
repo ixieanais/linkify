@@ -14,6 +14,7 @@ type BlockService struct {
 }
 
 type CreateBlockInput struct {
+	UserID    uuid.UUID
 	ProfileID uuid.UUID
 	Title     string
 	Text      *string
@@ -42,6 +43,7 @@ func (s *BlockService) Create(c context.Context, input CreateBlockInput) (*model
 
 	block := &models.Block{
 		ID:        uuid.NewV4(),
+		UserID:    input.UserID,
 		ProfileID: input.ProfileID,
 		Title:     input.Title,
 		Text:      input.Text,

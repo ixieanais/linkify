@@ -6,6 +6,8 @@ import (
 
 type Block struct {
 	BaseModel
+	UserID    uuid.UUID `gorm:"type:uuid"`
+	User      User      `gorm:"foreignKey:UserID"`
 	ProfileID uuid.UUID `gorm:"type:uuid"`
 	Profile   Profile   `gorm:"foreignKey:ProfileID"`
 	Title     string
