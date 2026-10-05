@@ -25,13 +25,15 @@ type CreateBlockInput struct {
 }
 
 type UpdateBlockInput struct {
-	ID       uuid.UUID
-	Title    string
-	Text     *string
-	Image    *string
-	URL      *string
-	Type     string
-	IsActive *bool
+	ID        uuid.UUID
+	UserID    uuid.UUID
+	ProfileID uuid.UUID
+	Title     string
+	Text      *string
+	Image     *string
+	URL       *string
+	Type      string
+	IsActive  *bool
 }
 
 func NewBlockService(repo *repositories.BlockRepository) *BlockService {
@@ -62,12 +64,12 @@ func (s *BlockService) Create(c context.Context, input CreateBlockInput) (*model
 	return block, nil
 }
 
-func (s *BlockService) GetAll(c context.Context) ([]models.Block, error) {
-	return s.repo.GetAll(c)
+func (s *BlockService) GetAll(c context.Context, profileID uuid.UUID) ([]models.Block, error) {
+	return s.repo.GetAll(c, profileID)
 }
 
-func (s *BlockService) Get(c context.Context, id uuid.UUID) (*models.Block, error) {
-	return s.repo.GetByID(c, id)
+func (s *BlockService) Get(c context.Context, id, userID, profileID uuid.UUID) (*models.Block, error) {
+	return s.repo.GetByID(c, id, userID, profileID)
 }
 
 func (s *BlockService) Update(c context.Context, input UpdateBlockInput) error {
@@ -85,6 +87,6 @@ func (s *BlockService) Update(c context.Context, input UpdateBlockInput) error {
 	return s.repo.Update(c, block)
 }
 
-func (s *BlockService) Delete(c context.Context, id uuid.UUID) error {
-	return s.repo.Delete(c, id)
+func (s *BlockService) Delete(c context.Context, id, userID, profileID uuid.UUID) error {
+	return s.repo.Delete(c, id, userID, profileID)
 }
