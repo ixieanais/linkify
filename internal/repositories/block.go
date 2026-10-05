@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"context"
-	"errors"
 	"uuid"
 
 	"linkify/internal/models"
@@ -22,18 +21,15 @@ func (r *BlockRepository) Create(c context.Context, block *models.Block) error {
 	return r.db.WithContext(c).Create(block).Error
 }
 
-func (r *BlockRepository) GetAll(c context.Context) ([]models.Block, error) {
+func (r *BlockRepository) GetAll(c context.Context, profileID uuid.UUID) ([]models.Block, error) {
 	var blocks []models.Block
-	err := r.db.WithContext(c).Preload("Profile").Preload("Profile.User").Find(&blocks).Error
+	err := r.db.WithContext(c).Where("profile_id = ?", profileID).Find(&blocks).Error
 	return blocks, err
 }
 
-func (r *BlockRepository) GetByID(c context.Context, id uuid.UUID) (*models.Block, error) {
+func (r *BlockRepository) GetByID(c context.Context, id, userID, profileID uuid.UUID) (*models.Block, error) {
 	var block *models.Block
-	if err := r.db.WithContext(c).Preload("Profile").Preload("Profile.User").First(&block, id).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
+	if err := r.db.WithContext(c).Where("id = ? AND user_id = ? AND profile_id = ?", id, userID, profileID).First(&block).Error; err != nil {
 		return nil, err
 	}
 
@@ -44,6 +40,16 @@ func (r *BlockRepository) Update(c context.Context, block *models.Block) error {
 	return r.db.WithContext(c).Save(block).Error
 }
 
-func (r *BlockRepository) Delete(c context.Context, id uuid.UUID) error {
-	return r.db.WithContext(c).Delete(&models.Block{}, id).Error
+func (r *BlockRepository) Delete(c context.Context, id, userID, profileID uuid.UUID) error {
+	result := r.db.WithContext(c).Delete(&models.Block{}, "id = ? AND user_id = ? AND profile_id = ?", id, userID, profileID)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+
+	return nil
 }
