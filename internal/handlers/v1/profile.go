@@ -36,15 +36,14 @@ func NewProfileHandler(service *services.ProfileService) *ProfileHandler {
 func (h *ProfileHandler) Create(c *gin.Context) {
 	rawUserID, exists := c.Get("userID")
 	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"detail": "user id not found in context",
 		})
-		return
 	}
 
 	userID, err := uuidutil.ParseUUID(rawUserID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
 		return
@@ -53,7 +52,7 @@ func (h *ProfileHandler) Create(c *gin.Context) {
 	var request dto.ProfileRequest
 
 	if err := c.ShouldBindJSON(&request); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{
+		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
 			"detail": "invalid profile struct",
 		})
 	}
@@ -69,16 +68,14 @@ func (h *ProfileHandler) Create(c *gin.Context) {
 	profile, err := h.service.Create(c, input)
 	if err != nil {
 		if errors.Is(err, gorm.ErrForeignKeyViolated) {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 				"detail": "invalid user id",
 			})
-			return
 		}
 
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
-		return
 	}
 
 	response := dto.ProfileResponse{
@@ -155,25 +152,22 @@ func (h *ProfileHandler) Get(c *gin.Context) {
 	rawID := c.Param("id")
 	id, err := uuid.Parse(rawID)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"detail": err.Error(),
 		})
-		return
 	}
 
 	profile, err := h.service.Get(c, id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.JSON(http.StatusNotFound, gin.H{
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 				"detail": err.Error(),
 			})
-			return
 		}
 
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
-		return
 	}
 
 	response := dto.ProfileResponse{
@@ -200,38 +194,34 @@ func (h *ProfileHandler) Get(c *gin.Context) {
 //	@Security	ApiKeyAuth
 //	@Router		/profiles/{id}/ [put]
 func (h *ProfileHandler) Update(c *gin.Context) {
+	rawUserID, exists := c.Get("userID")
+	if !exists {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"detail": "user id not found in context",
+		})
+	}
+
+	userID, err := uuidutil.ParseUUID(rawUserID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"detail": err.Error(),
+		})
+	}
+
 	rawID := c.Param("id")
 	id, err := uuid.Parse(rawID)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"detail": err.Error(),
 		})
-		return
 	}
 
 	var req dto.ProfileRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{
+		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
 			"detail": err.Error(),
 		})
-		return
-	}
-
-	rawUserID, exists := c.Get("userID")
-	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"detail": "user id not found in context",
-		})
-		return
-	}
-
-	userID, err := uuidutil.ParseUUID(rawUserID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"detail": err.Error(),
-		})
-		return
 	}
 
 	input := services.UpdateProfileInput{
@@ -245,13 +235,12 @@ func (h *ProfileHandler) Update(c *gin.Context) {
 
 	if err := h.service.Update(c, input); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.JSON(http.StatusNotFound, gin.H{
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 				"detail": "profile not found",
 			})
-			return
 		}
 
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
 	}
@@ -267,39 +256,35 @@ func (h *ProfileHandler) Update(c *gin.Context) {
 //	@Security	ApiKeyAuth
 //	@Router		/profiles/{id}/ [delete]
 func (h *ProfileHandler) Delete(c *gin.Context) {
-	rawID := c.Param("id")
-	id, err := uuid.Parse(rawID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"detail": err.Error(),
-		})
-		return
-	}
-
 	rawUserID, exists := c.Get("userID")
 	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"detail": "user id not found in context",
 		})
-		return
 	}
 
 	userID, err := uuidutil.ParseUUID(rawUserID)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"detail": err.Error(),
 		})
-		return
+	}
+
+	rawID := c.Param("id")
+	id, err := uuid.Parse(rawID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"detail": err.Error(),
+		})
 	}
 
 	if err := h.service.Delete(c, id, userID); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.JSON(http.StatusNotFound, gin.H{
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 				"detail": "profile not found",
 			})
-			return
 		}
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
 	}
