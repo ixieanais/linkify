@@ -21,15 +21,15 @@ func (r *ProfileRepository) Create(c context.Context, profile *models.Profile) e
 	return r.db.WithContext(c).Create(profile).Error
 }
 
-func (r *ProfileRepository) GetAll(c context.Context) ([]models.Profile, error) {
+func (r *ProfileRepository) GetAll(c context.Context, userID uuid.UUID) ([]models.Profile, error) {
 	var profiles []models.Profile
-	err := r.db.WithContext(c).Preload("User").Find(&profiles).Error
+	err := r.db.WithContext(c).Where("user_id = ?", userID).Find(&profiles).Error
 	return profiles, err
 }
 
 func (r *ProfileRepository) GetByID(c context.Context, id uuid.UUID) (*models.Profile, error) {
 	var profile models.Profile
-	if err := r.db.WithContext(c).Preload("User").First(&profile, "id = ?", id).Error; err != nil {
+	if err := r.db.WithContext(c).First(&profile, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
 

@@ -59,8 +59,8 @@ func (s *ProfileService) Create(c context.Context, input CreateProfileInput) (*m
 	return profile, nil
 }
 
-func (s *ProfileService) GetAll(c context.Context) ([]models.Profile, error) {
-	return s.repo.GetAll(c)
+func (s *ProfileService) GetAll(c context.Context, userID uuid.UUID) ([]models.Profile, error) {
+	return s.repo.GetAll(c, userID)
 }
 
 func (s *ProfileService) Get(c context.Context, id uuid.UUID) (*models.Profile, error) {
