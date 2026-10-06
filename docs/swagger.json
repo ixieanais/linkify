@@ -76,7 +76,17 @@
                     "profiles"
                 ],
                 "summary": "Get profiles",
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.ProfileResponse"
+                            }
+                        }
+                    }
+                }
             },
             "post": {
                 "security": [
@@ -726,7 +736,7 @@
         "dto.BlockResponse": {
             "type": "object",
             "properties": {
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
                 "id": {
@@ -747,7 +757,7 @@
                 "type": {
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "type": "string"
                 },
                 "url": {
@@ -772,7 +782,7 @@
         "dto.LinkResponse": {
             "type": "object",
             "properties": {
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
                 "id": {
@@ -784,7 +794,7 @@
                 "is_active": {
                     "type": "boolean"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "type": "string"
                 },
                 "url": {
@@ -818,13 +828,13 @@
                 "bio": {
                     "type": "string"
                 },
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
                 "id": {
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "type": "string"
                 },
                 "url": {
@@ -854,7 +864,7 @@
         "dto.UserResponse": {
             "type": "object",
             "properties": {
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
                 "email": {
@@ -863,7 +873,7 @@
                 "id": {
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "type": "string"
                 }
             }

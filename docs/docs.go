@@ -84,7 +84,17 @@ const docTemplate = `{
                     "profiles"
                 ],
                 "summary": "Get profiles",
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.ProfileResponse"
+                            }
+                        }
+                    }
+                }
             },
             "post": {
                 "security": [
@@ -734,7 +744,7 @@ const docTemplate = `{
         "dto.BlockResponse": {
             "type": "object",
             "properties": {
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
                 "id": {
@@ -755,7 +765,7 @@ const docTemplate = `{
                 "type": {
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "type": "string"
                 },
                 "url": {
@@ -780,7 +790,7 @@ const docTemplate = `{
         "dto.LinkResponse": {
             "type": "object",
             "properties": {
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
                 "id": {
@@ -792,7 +802,7 @@ const docTemplate = `{
                 "is_active": {
                     "type": "boolean"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "type": "string"
                 },
                 "url": {
@@ -826,13 +836,13 @@ const docTemplate = `{
                 "bio": {
                     "type": "string"
                 },
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
                 "id": {
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "type": "string"
                 },
                 "url": {
@@ -862,7 +872,7 @@ const docTemplate = `{
         "dto.UserResponse": {
             "type": "object",
             "properties": {
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
                 "email": {
@@ -871,7 +881,7 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "type": "string"
                 }
             }

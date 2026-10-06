@@ -16,7 +16,7 @@ definitions:
     type: object
   dto.BlockResponse:
     properties:
-      createdAt:
+      created_at:
         type: string
       id:
         type: string
@@ -30,7 +30,7 @@ definitions:
         type: string
       type:
         type: string
-      updatedAt:
+      updated_at:
         type: string
       url:
         type: string
@@ -46,7 +46,7 @@ definitions:
     type: object
   dto.LinkResponse:
     properties:
-      createdAt:
+      created_at:
         type: string
       id:
         type: string
@@ -54,7 +54,7 @@ definitions:
         type: string
       is_active:
         type: boolean
-      updatedAt:
+      updated_at:
         type: string
       url:
         type: string
@@ -76,11 +76,11 @@ definitions:
         type: string
       bio:
         type: string
-      createdAt:
+      created_at:
         type: string
       id:
         type: string
-      updatedAt:
+      updated_at:
         type: string
       url:
         type: string
@@ -100,13 +100,13 @@ definitions:
     type: object
   dto.UserResponse:
     properties:
-      createdAt:
+      created_at:
         type: string
       email:
         type: string
       id:
         type: string
-      updatedAt:
+      updated_at:
         type: string
     type: object
 host: localhost:8080
@@ -155,7 +155,13 @@ paths:
       - application/json
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ProfileResponse'
+            type: array
       security:
       - ApiKeyAuth: []
       summary: Get profiles
