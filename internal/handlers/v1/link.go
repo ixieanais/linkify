@@ -143,7 +143,7 @@ func (h *LinkHandler) GetAll(c *gin.Context) {
 //	@Param		linkId	path		string	true	"Link ID"		format(uuid)
 //	@Success	200		{object}	dto.LinkResponse
 //	@Security	ApiKeyAuth
-//	@Router		/profiles/{id}/links/{linkId} [get]
+//	@Router		/profiles/{id}/links/{linkId}/ [get]
 func (h *LinkHandler) Get(c *gin.Context) {
 	rawUserID, exists := c.Get("userID")
 	if !exists {
@@ -208,7 +208,7 @@ func (h *LinkHandler) Get(c *gin.Context) {
 //	@Param		linkId	path	string			true	"Link ID"		format(uuid)
 //	@Param		payload	body	dto.LinkRequest	true	"Link Updation Details"
 //	@Security	ApiKeyAuth
-//	@Router		/profiles/{id}/links/{linkId} [put]
+//	@Router		/profiles/{id}/links/{linkId}/ [put]
 func (h *LinkHandler) Update(c *gin.Context) {
 	rawUserID, exists := c.Get("userID")
 	if !exists {
