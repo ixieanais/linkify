@@ -9,7 +9,7 @@ type Profile struct {
 	UserID    uuid.UUID `gorm:"type:uuid"`
 	User      User      `gorm:"foreignKey:UserID"`
 	Username  string
-	URL       string
+	URL       string `gorm:"unique"`
 	Bio       *string
 	AvatarURL *string
 }
