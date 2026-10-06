@@ -17,7 +17,7 @@ type ProfileService struct {
 type CreateProfileInput struct {
 	UserID    uuid.UUID
 	Username  string
-	URL       string
+	Name      string
 	Bio       *string
 	AvatarURL *string
 }
@@ -26,7 +26,7 @@ type UpdateProfileInput struct {
 	ID        uuid.UUID
 	UserID    uuid.UUID
 	Username  string
-	URL       string
+	Name      string
 	Bio       *string
 	AvatarURL *string
 }
@@ -37,7 +37,7 @@ func NewProfileService(repo *repositories.ProfileRepository) *ProfileService {
 
 func (s *ProfileService) Create(c context.Context, input CreateProfileInput) (*models.Profile, error) {
 	username := strings.TrimSpace(input.Username)
-	url := strings.TrimSpace(input.URL)
+	name := strings.TrimSpace(input.Name)
 
 	now := time.Now()
 
@@ -45,7 +45,7 @@ func (s *ProfileService) Create(c context.Context, input CreateProfileInput) (*m
 		ID:        uuid.NewV4(),
 		UserID:    input.UserID,
 		Username:  username,
-		URL:       url,
+		Name:      name,
 		Bio:       input.Bio,
 		AvatarURL: input.AvatarURL,
 		CreatedAt: now,
@@ -69,13 +69,13 @@ func (s *ProfileService) Get(c context.Context, id uuid.UUID) (*models.Profile, 
 
 func (s *ProfileService) Update(c context.Context, input UpdateProfileInput) error {
 	username := strings.TrimSpace(input.Username)
-	url := strings.TrimSpace(input.URL)
+	name := strings.TrimSpace(input.Name)
 
 	profile := &models.Profile{
 		ID:        input.ID,
 		UserID:    input.UserID,
 		Username:  username,
-		URL:       url,
+		Name:      name,
 		Bio:       input.Bio,
 		AvatarURL: input.AvatarURL,
 		UpdatedAt: time.Now(),

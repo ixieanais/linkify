@@ -8,8 +8,8 @@ type Profile struct {
 	BaseModel
 	UserID    uuid.UUID `gorm:"type:uuid"`
 	User      User      `gorm:"foreignKey:UserID"`
-	Username  string
-	URL       string `gorm:"unique"`
+	Username  string    `gorm:"unique"`
+	Name      string
 	Bio       *string
 	AvatarURL *string
 }
