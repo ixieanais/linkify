@@ -67,6 +67,10 @@ func (s *ProfileService) Get(c context.Context, id uuid.UUID) (*models.Profile, 
 	return s.repo.GetByID(c, id)
 }
 
+func (s *ProfileService) GetByUsername(c context.Context, username string) (*models.Profile, error) {
+	return s.repo.GetByUsername(c, username)
+}
+
 func (s *ProfileService) Update(c context.Context, input UpdateProfileInput) error {
 	username := strings.TrimSpace(input.Username)
 	name := strings.TrimSpace(input.Name)
