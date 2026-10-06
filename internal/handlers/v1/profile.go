@@ -29,9 +29,9 @@ func NewProfileHandler(service *services.ProfileService) *ProfileHandler {
 //	@Tags		profiles
 //	@Accept		json
 //	@Produce	json
-//	@Security	ApiKeyAuth
 //	@Param		payload	body		dto.ProfileRequest	true	"User Creation Details"
 //	@Success	200		{object}	dto.ProfileResponse
+//	@Security	ApiKeyAuth
 //	@Router		/profiles/ [post]
 func (h *ProfileHandler) Create(c *gin.Context) {
 	rawUserID, exists := c.Get("userID")
@@ -100,9 +100,46 @@ func (h *ProfileHandler) Create(c *gin.Context) {
 //	@Tags		profiles
 //	@Accept		json
 //	@Produce	json
+//	@Success	200	{array}	dto.ProfileResponse
 //	@Security	ApiKeyAuth
 //	@Router		/profiles/ [get]
 func (h *ProfileHandler) GetAll(c *gin.Context) {
+	rawUserID, exists := c.Get("userID")
+	if !exists {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"detail": "user id not found in context",
+		})
+	}
+
+	userID, err := uuidutil.ParseUUID(rawUserID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"detail": err.Error(),
+		})
+	}
+
+	profiles, err := h.service.GetAll(c, userID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"detail": err.Error(),
+		})
+	}
+
+	response := []dto.ProfileResponse{}
+
+	for _, profile := range profiles {
+		response = append(response, dto.ProfileResponse{
+			ID:        profile.ID,
+			Username:  profile.Username,
+			URL:       profile.URL,
+			Bio:       profile.Bio,
+			AvatarURL: profile.AvatarURL,
+			CreatedAt: profile.CreatedAt,
+			UpdatedAt: profile.UpdatedAt,
+		})
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 // Get godoc
@@ -158,9 +195,9 @@ func (h *ProfileHandler) Get(c *gin.Context) {
 //	@Tags		profiles
 //	@Accept		json
 //	@Produce	json
-//	@Security	ApiKeyAuth
 //	@Param		id		path	string				true	"Profile ID"	format(uuid)
 //	@Param		payload	body	dto.ProfileRequest	true	"Profile Updation Details"
+//	@Security	ApiKeyAuth
 //	@Router		/profiles/{id}/ [put]
 func (h *ProfileHandler) Update(c *gin.Context) {
 	rawID := c.Param("id")
@@ -226,8 +263,8 @@ func (h *ProfileHandler) Update(c *gin.Context) {
 //	@Tags		profiles
 //	@Accept		json
 //	@Produce	json
-//	@Security	ApiKeyAuth
 //	@Param		id	path	string	true	"Profile ID"	format(uuid)
+//	@Security	ApiKeyAuth
 //	@Router		/profiles/{id}/ [delete]
 func (h *ProfileHandler) Delete(c *gin.Context) {
 	rawID := c.Param("id")
