@@ -34,7 +34,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UserRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.UserRequest"
                         }
                     }
                 ],
@@ -60,7 +60,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UserRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.UserRequest"
                         }
                     }
                 ],
@@ -90,7 +90,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.ProfileResponse"
+                                "$ref": "#/definitions/linkify_internal_dto.ProfileResponse"
                             }
                         }
                     }
@@ -119,7 +119,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.ProfileRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.ProfileRequest"
                         }
                     }
                 ],
@@ -127,13 +127,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.ProfileResponse"
+                            "$ref": "#/definitions/linkify_internal_dto.ProfileResponse"
                         }
                     }
                 }
             }
         },
-        "/profiles/{id}/": {
+        "/profiles/{idOrUsername}/": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -148,9 +148,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "format": "uuid",
-                        "description": "Profile ID",
-                        "name": "id",
+                        "description": "Profile ID or profile username",
+                        "name": "idOrUsername",
                         "in": "path",
                         "required": true
                     }
@@ -159,11 +158,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.ProfileResponse"
+                            "$ref": "#/definitions/linkify_internal_dto.ProfileResponse"
                         }
                     }
                 }
-            },
+            }
+        },
+        "/profiles/{id}/": {
             "put": {
                 "security": [
                     {
@@ -195,7 +196,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.ProfileRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.ProfileRequest"
                         }
                     }
                 ],
@@ -258,7 +259,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.BlockResponse"
+                                "$ref": "#/definitions/linkify_internal_dto.BlockResponse"
                             }
                         }
                     }
@@ -295,7 +296,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.BlockRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.BlockRequest"
                         }
                     }
                 ],
@@ -303,7 +304,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.BlockResponse"
+                            "$ref": "#/definitions/linkify_internal_dto.BlockResponse"
                         }
                     }
                 }
@@ -348,7 +349,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.BlockResponse"
+                            "$ref": "#/definitions/linkify_internal_dto.BlockResponse"
                         }
                     }
                 }
@@ -392,7 +393,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.BlockRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.BlockRequest"
                         }
                     }
                 ],
@@ -463,7 +464,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.LinkResponse"
+                                "$ref": "#/definitions/linkify_internal_dto.LinkResponse"
                             }
                         }
                     }
@@ -500,7 +501,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.LinkRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.LinkRequest"
                         }
                     }
                 ],
@@ -508,13 +509,13 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.LinkResponse"
+                            "$ref": "#/definitions/linkify_internal_dto.LinkResponse"
                         }
                     }
                 }
             }
         },
-        "/profiles/{id}/links/{linkId}": {
+        "/profiles/{id}/links/{linkId}/": {
             "get": {
                 "security": [
                     {
@@ -553,7 +554,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.LinkResponse"
+                            "$ref": "#/definitions/linkify_internal_dto.LinkResponse"
                         }
                     }
                 }
@@ -597,14 +598,12 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.LinkRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.LinkRequest"
                         }
                     }
                 ],
                 "responses": {}
-            }
-        },
-        "/profiles/{id}/links/{linkId}/": {
+            },
             "delete": {
                 "security": [
                     {
@@ -663,7 +662,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.UserResponse"
+                            "$ref": "#/definitions/linkify_internal_dto.UserResponse"
                         }
                     }
                 }
@@ -691,7 +690,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UserRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.UserRequest"
                         }
                     }
                 ],
@@ -718,7 +717,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "dto.BlockRequest": {
+        "linkify_internal_dto.BlockRequest": {
             "type": "object",
             "properties": {
                 "image": {
@@ -741,7 +740,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.BlockResponse": {
+        "linkify_internal_dto.BlockResponse": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -773,7 +772,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.LinkRequest": {
+        "linkify_internal_dto.LinkRequest": {
             "type": "object",
             "properties": {
                 "image": {
@@ -787,7 +786,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.LinkResponse": {
+        "linkify_internal_dto.LinkResponse": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -810,7 +809,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.ProfileRequest": {
+        "linkify_internal_dto.ProfileRequest": {
             "type": "object",
             "properties": {
                 "avatar_url": {
@@ -819,7 +818,7 @@ const docTemplate = `{
                 "bio": {
                     "type": "string"
                 },
-                "url": {
+                "name": {
                     "type": "string"
                 },
                 "username": {
@@ -827,7 +826,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.ProfileResponse": {
+        "linkify_internal_dto.ProfileResponse": {
             "type": "object",
             "properties": {
                 "avatar_url": {
@@ -842,10 +841,10 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
-                "updated_at": {
+                "name": {
                     "type": "string"
                 },
-                "url": {
+                "updated_at": {
                     "type": "string"
                 },
                 "username": {
@@ -853,7 +852,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.UserRequest": {
+        "linkify_internal_dto.UserRequest": {
             "type": "object",
             "required": [
                 "email",
@@ -869,7 +868,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.UserResponse": {
+        "linkify_internal_dto.UserResponse": {
             "type": "object",
             "properties": {
                 "created_at": {

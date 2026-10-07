@@ -26,7 +26,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UserRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.UserRequest"
                         }
                     }
                 ],
@@ -52,7 +52,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UserRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.UserRequest"
                         }
                     }
                 ],
@@ -82,7 +82,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.ProfileResponse"
+                                "$ref": "#/definitions/linkify_internal_dto.ProfileResponse"
                             }
                         }
                     }
@@ -111,7 +111,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.ProfileRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.ProfileRequest"
                         }
                     }
                 ],
@@ -119,13 +119,13 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.ProfileResponse"
+                            "$ref": "#/definitions/linkify_internal_dto.ProfileResponse"
                         }
                     }
                 }
             }
         },
-        "/profiles/{id}/": {
+        "/profiles/{idOrUsername}/": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -140,9 +140,8 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "format": "uuid",
-                        "description": "Profile ID",
-                        "name": "id",
+                        "description": "Profile ID or profile username",
+                        "name": "idOrUsername",
                         "in": "path",
                         "required": true
                     }
@@ -151,11 +150,13 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.ProfileResponse"
+                            "$ref": "#/definitions/linkify_internal_dto.ProfileResponse"
                         }
                     }
                 }
-            },
+            }
+        },
+        "/profiles/{id}/": {
             "put": {
                 "security": [
                     {
@@ -187,7 +188,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.ProfileRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.ProfileRequest"
                         }
                     }
                 ],
@@ -250,7 +251,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.BlockResponse"
+                                "$ref": "#/definitions/linkify_internal_dto.BlockResponse"
                             }
                         }
                     }
@@ -287,7 +288,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.BlockRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.BlockRequest"
                         }
                     }
                 ],
@@ -295,7 +296,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.BlockResponse"
+                            "$ref": "#/definitions/linkify_internal_dto.BlockResponse"
                         }
                     }
                 }
@@ -340,7 +341,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.BlockResponse"
+                            "$ref": "#/definitions/linkify_internal_dto.BlockResponse"
                         }
                     }
                 }
@@ -384,7 +385,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.BlockRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.BlockRequest"
                         }
                     }
                 ],
@@ -455,7 +456,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.LinkResponse"
+                                "$ref": "#/definitions/linkify_internal_dto.LinkResponse"
                             }
                         }
                     }
@@ -492,7 +493,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.LinkRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.LinkRequest"
                         }
                     }
                 ],
@@ -500,13 +501,13 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.LinkResponse"
+                            "$ref": "#/definitions/linkify_internal_dto.LinkResponse"
                         }
                     }
                 }
             }
         },
-        "/profiles/{id}/links/{linkId}": {
+        "/profiles/{id}/links/{linkId}/": {
             "get": {
                 "security": [
                     {
@@ -545,7 +546,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.LinkResponse"
+                            "$ref": "#/definitions/linkify_internal_dto.LinkResponse"
                         }
                     }
                 }
@@ -589,14 +590,12 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.LinkRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.LinkRequest"
                         }
                     }
                 ],
                 "responses": {}
-            }
-        },
-        "/profiles/{id}/links/{linkId}/": {
+            },
             "delete": {
                 "security": [
                     {
@@ -655,7 +654,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.UserResponse"
+                            "$ref": "#/definitions/linkify_internal_dto.UserResponse"
                         }
                     }
                 }
@@ -683,7 +682,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UserRequest"
+                            "$ref": "#/definitions/linkify_internal_dto.UserRequest"
                         }
                     }
                 ],
@@ -710,7 +709,7 @@
         }
     },
     "definitions": {
-        "dto.BlockRequest": {
+        "linkify_internal_dto.BlockRequest": {
             "type": "object",
             "properties": {
                 "image": {
@@ -733,7 +732,7 @@
                 }
             }
         },
-        "dto.BlockResponse": {
+        "linkify_internal_dto.BlockResponse": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -765,7 +764,7 @@
                 }
             }
         },
-        "dto.LinkRequest": {
+        "linkify_internal_dto.LinkRequest": {
             "type": "object",
             "properties": {
                 "image": {
@@ -779,7 +778,7 @@
                 }
             }
         },
-        "dto.LinkResponse": {
+        "linkify_internal_dto.LinkResponse": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -802,7 +801,7 @@
                 }
             }
         },
-        "dto.ProfileRequest": {
+        "linkify_internal_dto.ProfileRequest": {
             "type": "object",
             "properties": {
                 "avatar_url": {
@@ -811,7 +810,7 @@
                 "bio": {
                     "type": "string"
                 },
-                "url": {
+                "name": {
                     "type": "string"
                 },
                 "username": {
@@ -819,7 +818,7 @@
                 }
             }
         },
-        "dto.ProfileResponse": {
+        "linkify_internal_dto.ProfileResponse": {
             "type": "object",
             "properties": {
                 "avatar_url": {
@@ -834,10 +833,10 @@
                 "id": {
                     "type": "string"
                 },
-                "updated_at": {
+                "name": {
                     "type": "string"
                 },
-                "url": {
+                "updated_at": {
                     "type": "string"
                 },
                 "username": {
@@ -845,7 +844,7 @@
                 }
             }
         },
-        "dto.UserRequest": {
+        "linkify_internal_dto.UserRequest": {
             "type": "object",
             "required": [
                 "email",
@@ -861,7 +860,7 @@
                 }
             }
         },
-        "dto.UserResponse": {
+        "linkify_internal_dto.UserResponse": {
             "type": "object",
             "properties": {
                 "created_at": {
