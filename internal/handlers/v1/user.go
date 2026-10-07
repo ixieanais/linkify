@@ -171,8 +171,7 @@ func RegisterUserRoutes(r *gin.RouterGroup, repo *repositories.UserRepository) {
 	service := services.NewUserService(repo)
 	handler := NewUserHandler(service)
 
-	r.Use(middlewares.AuthMiddleware())
-	r.GET("/users/me/", handler.Get)
-	r.PUT("/users/me/", handler.Update)
-	r.DELETE("/users/me/", handler.Delete)
+	r.GET("/users/me/", middlewares.AuthMiddleware(), handler.Get)
+	r.PUT("/users/me/", middlewares.AuthMiddleware(), handler.Update)
+	r.DELETE("/users/me/", middlewares.AuthMiddleware(), handler.Delete)
 }
