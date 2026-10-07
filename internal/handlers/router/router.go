@@ -5,6 +5,7 @@ import (
 	"linkify/internal/config"
 	"linkify/internal/database"
 	v1 "linkify/internal/handlers/v1"
+	"linkify/internal/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,6 +13,7 @@ import (
 func New() *gin.Engine {
 	// gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
+	r.Use(middlewares.RateLimiter())
 
 	api := r.Group("/api")
 
