@@ -7,6 +7,7 @@ import (
 
 	"linkify/internal/dto"
 	"linkify/internal/middlewares"
+	"linkify/internal/models"
 	"linkify/internal/repositories"
 	"linkify/internal/services"
 	"linkify/internal/uuidutil"
@@ -152,24 +153,27 @@ func (h *ProfileHandler) GetAll(c *gin.Context) {
 //	@Tags		profiles
 //	@Accept		json
 //	@Produce	json
-//	@Param		id	path		string	true	"Profile ID"	format(uuid)
-//	@Success	200	{object}	dto.ProfileResponse
-//	@Router		/profiles/{id}/ [get]
+//	@Param		idOrUsername	path		string	true	"Profile ID or profile username"
+//	@Success	200				{object}	dto.ProfileResponse
+//	@Router		/profiles/{idOrUsername}/ [get]
 func (h *ProfileHandler) Get(c *gin.Context) {
-	rawID := c.Param("id")
-	id, err := uuid.Parse(rawID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"detail": err.Error(),
-		})
-		return
+	idOrUsername := c.Param("id")
+
+	var (
+		profile *models.Profile
+		err     error
+	)
+
+	if id, parseErr := uuid.Parse(idOrUsername); parseErr == nil {
+		profile, err = h.service.Get(c, id)
+	} else {
+		profile, err = h.service.GetByUsername(c, idOrUsername)
 	}
 
-	profile, err := h.service.Get(c, id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{
-				"detail": err.Error(),
+				"detail": "profile not found",
 			})
 			return
 		}
