@@ -36,14 +36,15 @@ func NewProfileHandler(service *services.ProfileService) *ProfileHandler {
 func (h *ProfileHandler) Create(c *gin.Context) {
 	rawUserID, exists := c.Get("userID")
 	if !exists {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": "user id not found in context",
 		})
+		return
 	}
 
 	userID, err := uuidutil.ParseUUID(rawUserID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
 		return
@@ -52,9 +53,10 @@ func (h *ProfileHandler) Create(c *gin.Context) {
 	var request dto.ProfileRequest
 
 	if err := c.ShouldBindJSON(&request); err != nil {
-		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
 			"detail": "invalid profile struct",
 		})
+		return
 	}
 
 	input := services.CreateProfileInput{
@@ -68,14 +70,16 @@ func (h *ProfileHandler) Create(c *gin.Context) {
 	profile, err := h.service.Create(c, input)
 	if err != nil {
 		if errors.Is(err, gorm.ErrForeignKeyViolated) {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusInternalServerError, gin.H{
 				"detail": "invalid user id",
 			})
+			return
 		}
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	response := dto.ProfileResponse{
@@ -103,23 +107,26 @@ func (h *ProfileHandler) Create(c *gin.Context) {
 func (h *ProfileHandler) GetAll(c *gin.Context) {
 	rawUserID, exists := c.Get("userID")
 	if !exists {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": "user id not found in context",
 		})
+		return
 	}
 
 	userID, err := uuidutil.ParseUUID(rawUserID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	profiles, err := h.service.GetAll(c, userID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	response := []dto.ProfileResponse{}
@@ -152,22 +159,25 @@ func (h *ProfileHandler) Get(c *gin.Context) {
 	rawID := c.Param("id")
 	id, err := uuid.Parse(rawID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	profile, err := h.service.Get(c, id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			c.JSON(http.StatusNotFound, gin.H{
 				"detail": err.Error(),
 			})
+			return
 		}
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	response := dto.ProfileResponse{
@@ -196,32 +206,36 @@ func (h *ProfileHandler) Get(c *gin.Context) {
 func (h *ProfileHandler) Update(c *gin.Context) {
 	rawUserID, exists := c.Get("userID")
 	if !exists {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": "user id not found in context",
 		})
+		return
 	}
 
 	userID, err := uuidutil.ParseUUID(rawUserID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	rawID := c.Param("id")
 	id, err := uuid.Parse(rawID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	var req dto.ProfileRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	input := services.UpdateProfileInput{
@@ -235,14 +249,16 @@ func (h *ProfileHandler) Update(c *gin.Context) {
 
 	if err := h.service.Update(c, input); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			c.JSON(http.StatusNotFound, gin.H{
 				"detail": "profile not found",
 			})
+			return
 		}
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 }
 

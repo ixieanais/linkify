@@ -37,32 +37,36 @@ func NewLinkHandler(service *services.LinkService) *LinkHandler {
 func (h *LinkHandler) Create(c *gin.Context) {
 	rawUserID, exists := c.Get("userID")
 	if !exists {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": "user id not found in context",
 		})
+		return
 	}
 
 	userID, err := uuidutil.ParseUUID(rawUserID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	rawProfileID := c.Param("id")
 	profileID, err := uuid.Parse(rawProfileID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": "invalid profile id type",
 		})
+		return
 	}
 
 	var req dto.LinkRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	input := services.CreateLinkInput{
@@ -75,9 +79,10 @@ func (h *LinkHandler) Create(c *gin.Context) {
 
 	link, err := h.service.Create(c, input)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	response := dto.LinkResponse{
@@ -105,16 +110,18 @@ func (h *LinkHandler) GetAll(c *gin.Context) {
 	rawProfileID := c.Param("id")
 	profileID, err := uuid.Parse(rawProfileID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": "invalid profile id type",
 		})
+		return
 	}
 
 	links, err := h.service.GetAll(c, profileID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	response := []dto.LinkResponse{}
@@ -147,41 +154,46 @@ func (h *LinkHandler) GetAll(c *gin.Context) {
 func (h *LinkHandler) Get(c *gin.Context) {
 	rawUserID, exists := c.Get("userID")
 	if !exists {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": "user id not found in context",
 		})
+		return
 	}
 	userID, err := uuidutil.ParseUUID(rawUserID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	rawProfileID := c.Param("id")
 	profileID, err := uuid.Parse(rawProfileID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": "invalid profile id type",
 		})
+		return
 	}
 
 	rawLinkID := c.Param("lid")
 	linkID, err := uuid.Parse(rawLinkID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": "invalid link id type",
 		})
+		return
 	}
 
 	link, err := h.service.Get(c, linkID, userID, profileID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			c.JSON(http.StatusNotFound, gin.H{
 				"detail": "link not found",
 			})
+			return
 		}
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
 	}
@@ -212,40 +224,45 @@ func (h *LinkHandler) Get(c *gin.Context) {
 func (h *LinkHandler) Update(c *gin.Context) {
 	rawUserID, exists := c.Get("userID")
 	if !exists {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": "user id not found in context",
 		})
+		return
 	}
 
 	userID, err := uuidutil.ParseUUID(rawUserID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	rawProfileID := c.Param("id")
 	profileID, err := uuid.Parse(rawProfileID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": "invalid profile id type",
 		})
+		return
 	}
 
 	rawLinkID := c.Param("lid")
 	linkID, err := uuid.Parse(rawLinkID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": "invalid link id type",
 		})
+		return
 	}
 
 	var req dto.LinkRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	input := services.UpdateLinkInput{
@@ -259,13 +276,15 @@ func (h *LinkHandler) Update(c *gin.Context) {
 
 	if err := h.service.Update(c, input); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			c.JSON(http.StatusNotFound, gin.H{
 				"detail": "link not found",
 			})
+			return
 		}
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -286,43 +305,49 @@ func (h *LinkHandler) Update(c *gin.Context) {
 func (h *LinkHandler) Delete(c *gin.Context) {
 	rawUserID, exists := c.Get("userID")
 	if !exists {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": "user id not found in context",
 		})
+		return
 	}
 
 	userID, err := uuidutil.ParseUUID(rawUserID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	rawProfileID := c.Param("id")
 	profileID, err := uuid.Parse(rawProfileID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": "invalid profile id type",
 		})
+		return
 	}
 
 	rawLinkID := c.Param("lid")
 	linkID, err := uuid.Parse(rawLinkID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": "invalid link id type",
 		})
+		return
 	}
 
 	if err := h.service.Delete(c, linkID, userID, profileID); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			c.JSON(http.StatusNotFound, gin.H{
 				"detail": "link not found",
 			})
+			return
 		}
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{

@@ -83,6 +83,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	input := services.AuthInput{
@@ -97,6 +98,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"detail": "invalid email or password",
 			})
+			return
 		}
 		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": err.Error(),

@@ -37,32 +37,36 @@ func NewBlockHandler(service *services.BlockService) *BlockHandler {
 func (h *BlockHandler) Create(c *gin.Context) {
 	rawUserID, exists := c.Get("userID")
 	if !exists {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": "user id not found in context",
 		})
+		return
 	}
 
 	userID, err := uuidutil.ParseUUID(rawUserID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	rawProfileID := c.Param("id")
 	profileID, err := uuid.Parse(rawProfileID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": "invalid profile id type",
 		})
+		return
 	}
 
 	var req dto.BlockRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	input := services.CreateBlockInput{
@@ -78,9 +82,10 @@ func (h *BlockHandler) Create(c *gin.Context) {
 
 	block, err := h.service.Create(c, input)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	response := dto.BlockResponse{
@@ -111,16 +116,18 @@ func (h *BlockHandler) GetAll(c *gin.Context) {
 	rawProfileID := c.Param("id")
 	profileID, err := uuid.Parse(rawProfileID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": "invalid profile id type",
 		})
+		return
 	}
 
 	blocks, err := h.service.GetAll(c, profileID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	response := []dto.BlockResponse{}
@@ -156,38 +163,42 @@ func (h *BlockHandler) GetAll(c *gin.Context) {
 func (h *BlockHandler) Get(c *gin.Context) {
 	rawUserID, exists := c.Get("userID")
 	if !exists {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": "user id not found in context",
 		})
+		return
 	}
 
 	userID, err := uuidutil.ParseUUID(rawUserID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	rawProfileID := c.Param("id")
 	profileID, err := uuid.Parse(rawProfileID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": "invalid profile id type",
 		})
+		return
 	}
 
 	rawBlockID := c.Param("bid")
 	blockID, err := uuid.Parse(rawBlockID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": "invalid block id type",
 		})
+		return
 	}
 
 	block, err := h.service.Get(c, blockID, userID, profileID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			c.JSON(http.StatusNotFound, gin.H{
 				"detail": "block not found",
 			})
 		}
@@ -222,40 +233,45 @@ func (h *BlockHandler) Get(c *gin.Context) {
 func (h *BlockHandler) Update(c *gin.Context) {
 	rawUserID, exists := c.Get("userID")
 	if !exists {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": "user id not found in context",
 		})
+		return
 	}
 
 	userID, err := uuidutil.ParseUUID(rawUserID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	rawProfileID := c.Param("id")
 	profileID, err := uuid.Parse(rawProfileID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": "invalid profile id type",
 		})
+		return
 	}
 
 	rawBlockID := c.Param("bid")
 	blockID, err := uuid.Parse(rawBlockID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": "invalid block id type",
 		})
+		return
 	}
 
 	var req dto.BlockRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	input := services.UpdateBlockInput{
@@ -272,13 +288,15 @@ func (h *BlockHandler) Update(c *gin.Context) {
 
 	if err := h.service.Update(c, input); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			c.JSON(http.StatusNotFound, gin.H{
 				"detail": "block not found",
 			})
+			return
 		}
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -299,43 +317,49 @@ func (h *BlockHandler) Update(c *gin.Context) {
 func (h *BlockHandler) Delete(c *gin.Context) {
 	rawUserID, exists := c.Get("userID")
 	if !exists {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": "user id not found in context",
 		})
+		return
 	}
 
 	userID, err := uuidutil.ParseUUID(rawUserID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	rawProfileID := c.Param("id")
 	profileID, err := uuid.Parse(rawProfileID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": "invalid profile id type",
 		})
+		return
 	}
 
 	rawBlockID := c.Param("bid")
 	blockID, err := uuid.Parse(rawBlockID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"detail": "invalid block id type",
 		})
+		return
 	}
 
 	if err := h.service.Delete(c, blockID, userID, profileID); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			c.JSON(http.StatusNotFound, gin.H{
 				"detail": "block not found",
 			})
+			return
 		}
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"detail": err.Error(),
 		})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
