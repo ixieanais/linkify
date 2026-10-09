@@ -51,9 +51,9 @@ func (h *ProfileHandler) Create(c *gin.Context) {
 		return
 	}
 
-	var request dto.ProfileRequest
+	var req dto.ProfileRequest
 
-	if err := c.ShouldBindJSON(&request); err != nil {
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{
 			"detail": "invalid profile struct",
 		})
@@ -61,11 +61,12 @@ func (h *ProfileHandler) Create(c *gin.Context) {
 	}
 
 	input := services.CreateProfileInput{
-		UserID:    userID,
-		Username:  request.Username,
-		Name:      request.Name,
-		Bio:       request.Bio,
-		AvatarURL: request.AvatarURL,
+		UserID:     userID,
+		Username:   req.Username,
+		Name:       req.Name,
+		Bio:        req.Bio,
+		AvatarURL:  req.AvatarURL,
+		Background: req.Background,
 	}
 
 	profile, err := h.service.Create(c, input)
@@ -84,13 +85,14 @@ func (h *ProfileHandler) Create(c *gin.Context) {
 	}
 
 	response := dto.ProfileResponse{
-		ID:        profile.ID,
-		Username:  profile.Username,
-		Name:      profile.Name,
-		Bio:       profile.Bio,
-		AvatarURL: profile.AvatarURL,
-		CreatedAt: profile.CreatedAt,
-		UpdatedAt: profile.UpdatedAt,
+		ID:         profile.ID,
+		Username:   profile.Username,
+		Name:       profile.Name,
+		Bio:        profile.Bio,
+		AvatarURL:  profile.AvatarURL,
+		Background: profile.Background,
+		CreatedAt:  profile.CreatedAt,
+		UpdatedAt:  profile.UpdatedAt,
 	}
 
 	c.JSON(http.StatusCreated, response)
@@ -134,13 +136,14 @@ func (h *ProfileHandler) GetAll(c *gin.Context) {
 
 	for _, profile := range profiles {
 		response = append(response, dto.ProfileResponse{
-			ID:        profile.ID,
-			Username:  profile.Username,
-			Name:      profile.Name,
-			Bio:       profile.Bio,
-			AvatarURL: profile.AvatarURL,
-			CreatedAt: profile.CreatedAt,
-			UpdatedAt: profile.UpdatedAt,
+			ID:         profile.ID,
+			Username:   profile.Username,
+			Name:       profile.Name,
+			Bio:        profile.Bio,
+			AvatarURL:  profile.AvatarURL,
+			Background: profile.Background,
+			CreatedAt:  profile.CreatedAt,
+			UpdatedAt:  profile.UpdatedAt,
 		})
 	}
 
@@ -185,13 +188,14 @@ func (h *ProfileHandler) Get(c *gin.Context) {
 	}
 
 	response := dto.ProfileResponse{
-		ID:        profile.ID,
-		Username:  profile.Username,
-		Name:      profile.Name,
-		Bio:       profile.Bio,
-		AvatarURL: profile.AvatarURL,
-		CreatedAt: profile.CreatedAt,
-		UpdatedAt: profile.UpdatedAt,
+		ID:         profile.ID,
+		Username:   profile.Username,
+		Name:       profile.Name,
+		Bio:        profile.Bio,
+		AvatarURL:  profile.AvatarURL,
+		Background: profile.Background,
+		CreatedAt:  profile.CreatedAt,
+		UpdatedAt:  profile.UpdatedAt,
 	}
 
 	c.JSON(http.StatusOK, response)
@@ -243,12 +247,13 @@ func (h *ProfileHandler) Update(c *gin.Context) {
 	}
 
 	input := services.UpdateProfileInput{
-		ID:        id,
-		UserID:    userID,
-		Username:  req.Username,
-		Name:      req.Name,
-		Bio:       req.Bio,
-		AvatarURL: req.AvatarURL,
+		ID:         id,
+		UserID:     userID,
+		Username:   req.Username,
+		Name:       req.Name,
+		Bio:        req.Bio,
+		AvatarURL:  req.AvatarURL,
+		Background: req.Background,
 	}
 
 	if err := h.service.Update(c, input); err != nil {

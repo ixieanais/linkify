@@ -15,20 +15,22 @@ type ProfileService struct {
 }
 
 type CreateProfileInput struct {
-	UserID    uuid.UUID
-	Username  string
-	Name      string
-	Bio       *string
-	AvatarURL *string
+	UserID     uuid.UUID
+	Username   string
+	Name       string
+	Bio        *string
+	AvatarURL  *string
+	Background string
 }
 
 type UpdateProfileInput struct {
-	ID        uuid.UUID
-	UserID    uuid.UUID
-	Username  string
-	Name      string
-	Bio       *string
-	AvatarURL *string
+	ID         uuid.UUID
+	UserID     uuid.UUID
+	Username   string
+	Name       string
+	Bio        *string
+	AvatarURL  *string
+	Background string
 }
 
 func NewProfileService(repo *repositories.ProfileRepository) *ProfileService {
