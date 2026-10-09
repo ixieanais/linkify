@@ -44,14 +44,15 @@ func (s *ProfileService) Create(c context.Context, input CreateProfileInput) (*m
 	now := time.Now()
 
 	profile := &models.Profile{
-		ID:        uuid.NewV4(),
-		UserID:    input.UserID,
-		Username:  username,
-		Name:      name,
-		Bio:       input.Bio,
-		AvatarURL: input.AvatarURL,
-		CreatedAt: now,
-		UpdatedAt: now,
+		ID:         uuid.NewV4(),
+		UserID:     input.UserID,
+		Username:   username,
+		Name:       name,
+		Bio:        input.Bio,
+		AvatarURL:  input.AvatarURL,
+		Background: input.Background,
+		CreatedAt:  now,
+		UpdatedAt:  now,
 	}
 
 	if err := s.repo.Create(c, profile); err != nil {
@@ -78,13 +79,14 @@ func (s *ProfileService) Update(c context.Context, input UpdateProfileInput) err
 	name := strings.TrimSpace(input.Name)
 
 	profile := &models.Profile{
-		ID:        input.ID,
-		UserID:    input.UserID,
-		Username:  username,
-		Name:      name,
-		Bio:       input.Bio,
-		AvatarURL: input.AvatarURL,
-		UpdatedAt: time.Now(),
+		ID:         input.ID,
+		UserID:     input.UserID,
+		Username:   username,
+		Name:       name,
+		Bio:        input.Bio,
+		AvatarURL:  input.AvatarURL,
+		Background: input.Background,
+		UpdatedAt:  time.Now(),
 	}
 
 	return s.repo.Update(c, profile)
