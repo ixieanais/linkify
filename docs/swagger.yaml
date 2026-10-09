@@ -63,6 +63,8 @@ definitions:
     properties:
       avatar_url:
         type: string
+      background:
+        type: string
       bio:
         type: string
       name:
@@ -73,6 +75,8 @@ definitions:
   linkify_internal_dto.ProfileResponse:
     properties:
       avatar_url:
+        type: string
+      background:
         type: string
       bio:
         type: string

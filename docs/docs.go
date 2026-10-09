@@ -815,6 +815,9 @@ const docTemplate = `{
                 "avatar_url": {
                     "type": "string"
                 },
+                "background": {
+                    "type": "string"
+                },
                 "bio": {
                     "type": "string"
                 },
@@ -830,6 +833,9 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "avatar_url": {
+                    "type": "string"
+                },
+                "background": {
                     "type": "string"
                 },
                 "bio": {
