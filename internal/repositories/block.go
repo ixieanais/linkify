@@ -37,7 +37,17 @@ func (r *BlockRepository) GetByID(c context.Context, id, userID, profileID uuid.
 }
 
 func (r *BlockRepository) Update(c context.Context, block *models.Block) error {
-	return r.db.WithContext(c).Save(block).Error
+	result := r.db.WithContext(c).Model(&models.Block{}).Where("id = ?", block.ID).Updates(block)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+
+	return nil
 }
 
 func (r *BlockRepository) Delete(c context.Context, id, userID, profileID uuid.UUID) error {
