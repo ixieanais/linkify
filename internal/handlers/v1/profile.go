@@ -315,13 +315,17 @@ func (h *ProfileHandler) Delete(c *gin.Context) {
 	}
 }
 
-func RegisterProfileRoutes(r *gin.RouterGroup, repo *repositories.ProfileRepository) {
-	service := services.NewProfileService(repo)
+func RegisterProfileRoutes(
+	r *gin.RouterGroup,
+	pr *repositories.ProfileRepository,
+	ss *services.SessionService,
+) {
+	service := services.NewProfileService(pr)
 	handler := NewProfileHandler(service)
 
-	r.POST("/profiles/", middlewares.AuthMiddleware(), handler.Create)
-	r.GET("/profiles/", middlewares.AuthMiddleware(), handler.GetAll)
+	r.POST("/profiles/", middlewares.AuthMiddleware(ss), handler.Create)
+	r.GET("/profiles/", middlewares.AuthMiddleware(ss), handler.GetAll)
 	r.GET("/profiles/:id/", handler.Get)
-	r.PUT("/profiles/:id/", middlewares.AuthMiddleware(), handler.Update)
-	r.DELETE("/profiles/:id/", middlewares.AuthMiddleware(), handler.Delete)
+	r.PUT("/profiles/:id/", middlewares.AuthMiddleware(ss), handler.Update)
+	r.DELETE("/profiles/:id/", middlewares.AuthMiddleware(ss), handler.Delete)
 }

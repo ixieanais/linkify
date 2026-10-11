@@ -355,13 +355,17 @@ func (h *LinkHandler) Delete(c *gin.Context) {
 	})
 }
 
-func RegisterLinkRoutes(r *gin.RouterGroup, repo *repositories.LinkRepository) {
-	service := services.NewLinkService(repo)
+func RegisterLinkRoutes(
+	r *gin.RouterGroup,
+	lr *repositories.LinkRepository,
+	ss *services.SessionService,
+) {
+	service := services.NewLinkService(lr)
 	handler := NewLinkHandler(service)
 
-	r.POST("/profiles/:id/links/", middlewares.AuthMiddleware(), handler.Create)
+	r.POST("/profiles/:id/links/", middlewares.AuthMiddleware(ss), handler.Create)
 	r.GET("/profiles/:id/links/", handler.GetAll)
-	r.GET("/profiles/:id/links/:lid/", middlewares.AuthMiddleware(), handler.Get)
-	r.PUT("/profiles/:id/links/:lid/", middlewares.AuthMiddleware(), handler.Update)
-	r.DELETE("/profiles/:id/links/:lid/", middlewares.AuthMiddleware(), handler.Delete)
+	r.GET("/profiles/:id/links/:lid/", middlewares.AuthMiddleware(ss), handler.Get)
+	r.PUT("/profiles/:id/links/:lid/", middlewares.AuthMiddleware(ss), handler.Update)
+	r.DELETE("/profiles/:id/links/:lid/", middlewares.AuthMiddleware(ss), handler.Delete)
 }

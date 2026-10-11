@@ -121,8 +121,12 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	})
 }
 
-func RegisterAuthRoutes(r *gin.RouterGroup, repo *repositories.UserRepository) {
-	service := services.NewAuthService(repo)
+func RegisterAuthRoutes(
+	r *gin.RouterGroup,
+	ur *repositories.UserRepository,
+	ss *services.SessionService,
+) {
+	service := services.NewAuthService(ur, ss)
 	handler := NewAuthHandler(service)
 
 	r.POST("/auth/signup/", handler.Signup)

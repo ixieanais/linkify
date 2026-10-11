@@ -167,11 +167,15 @@ func (h *UserHandler) Delete(c *gin.Context) {
 	}
 }
 
-func RegisterUserRoutes(r *gin.RouterGroup, repo *repositories.UserRepository) {
-	service := services.NewUserService(repo)
+func RegisterUserRoutes(
+	r *gin.RouterGroup,
+	ur *repositories.UserRepository,
+	ss *services.SessionService,
+) {
+	service := services.NewUserService(ur)
 	handler := NewUserHandler(service)
 
-	r.GET("/users/me/", middlewares.AuthMiddleware(), handler.Get)
-	r.PUT("/users/me/", middlewares.AuthMiddleware(), handler.Update)
-	r.DELETE("/users/me/", middlewares.AuthMiddleware(), handler.Delete)
+	r.GET("/users/me/", middlewares.AuthMiddleware(ss), handler.Get)
+	r.PUT("/users/me/", middlewares.AuthMiddleware(ss), handler.Update)
+	r.DELETE("/users/me/", middlewares.AuthMiddleware(ss), handler.Delete)
 }

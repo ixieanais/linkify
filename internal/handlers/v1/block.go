@@ -367,13 +367,17 @@ func (h *BlockHandler) Delete(c *gin.Context) {
 	})
 }
 
-func RegisterBlockRoutes(r *gin.RouterGroup, repo *repositories.BlockRepository) {
-	service := services.NewBlockService(repo)
+func RegisterBlockRoutes(
+	r *gin.RouterGroup,
+	br *repositories.BlockRepository,
+	ss *services.SessionService,
+) {
+	service := services.NewBlockService(br)
 	handler := NewBlockHandler(service)
 
-	r.POST("/profiles/:id/blocks/", middlewares.AuthMiddleware(), handler.Create)
+	r.POST("/profiles/:id/blocks/", middlewares.AuthMiddleware(ss), handler.Create)
 	r.GET("/profiles/:id/blocks/", handler.GetAll)
-	r.GET("/profiles/:id/blocks/:bid/", middlewares.AuthMiddleware(), handler.Get)
-	r.PUT("/profiles/:id/blocks/:bid/", middlewares.AuthMiddleware(), handler.Update)
-	r.DELETE("/profiles/:id/blocks/:bid/", middlewares.AuthMiddleware(), handler.Delete)
+	r.GET("/profiles/:id/blocks/:bid/", middlewares.AuthMiddleware(ss), handler.Get)
+	r.PUT("/profiles/:id/blocks/:bid/", middlewares.AuthMiddleware(ss), handler.Update)
+	r.DELETE("/profiles/:id/blocks/:bid/", middlewares.AuthMiddleware(ss), handler.Delete)
 }
