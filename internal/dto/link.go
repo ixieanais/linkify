@@ -8,7 +8,7 @@ type LinkResponse struct {
 }
 
 type LinkRequest struct {
-	URL      string `json:"url"`
-	Image    string `json:"image"`
+	URL      string `json:"url" binding:"required"`
+	Image    string `json:"image" binding:"required"`
 	IsActive *bool  `json:"is_active"`
 }
