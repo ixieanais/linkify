@@ -13,14 +13,16 @@ import (
 
 type Claims struct {
 	UserID uuid.UUID `json:"user_id"`
+	Token  string    `json:"token"`
 	jwt.RegisteredClaims
 }
 
-func GenerateToken(userID uuid.UUID) (string, error) {
+func GenerateToken(userID uuid.UUID, sessionToken string) (string, error) {
 	expirationTime := time.Now().Add(14 * 24 * time.Hour)
 
 	claims := &Claims{
 		UserID:    userID,
+		Token:     sessionToken,
 		ExpiresAt: jwt.NewNumericDate(expirationTime),
 		IssuedAt:  jwt.NewNumericDate(time.Now()),
 		Subject:   userID.String(),
