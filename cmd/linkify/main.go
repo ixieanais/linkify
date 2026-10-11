@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -21,12 +22,15 @@ import (
 // @name						Authorization
 func main() {
 	fmt.Println("Starting...")
-	r := router.New()
+	c, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	r := router.New(c)
 
 	docs.SwaggerInfo.BasePath = "/api/v1/"
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	if err := r.Run("127.0.0.1:8080"); err != nil {
+	if err := r.Run(":8080"); err != nil {
 		log.Fatal(err)
 	}
 }
