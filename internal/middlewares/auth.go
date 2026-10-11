@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AuthMiddleware() gin.HandlerFunc {
+func AuthMiddleware(ss *services.SessionService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var tokens []string
 
@@ -27,7 +27,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			tokens = append(tokens, strings.TrimSpace(parts[1]))
 		}
 
-		if session, err := c.Cookie("session"); err == nil && session != "" {
+		if session, err := c.Cookie("session_id"); err == nil && session != "" {
 			tokens = append(tokens, session)
 		}
 
@@ -40,6 +40,11 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		for _, tokenString := range tokens {
 			claims, err := services.ValidateToken(tokenString)
+			if err != nil {
+				continue
+			}
+
+			_, err = ss.Validate(c, claims.Token)
 			if err != nil {
 				continue
 			}
