@@ -13,7 +13,8 @@ import (
 )
 
 type AuthService struct {
-	repo *repositories.UserRepository
+	ur *repositories.UserRepository
+	ss *SessionService
 }
 
 type AuthInput struct {
@@ -21,8 +22,11 @@ type AuthInput struct {
 	Password string
 }
 
-func NewAuthService(repo *repositories.UserRepository) *AuthService {
-	return &AuthService{repo: repo}
+func NewAuthService(
+	ur *repositories.UserRepository,
+	ss *SessionService,
+) *AuthService {
+	return &AuthService{ur: ur, ss: ss}
 }
 
 func (s *AuthService) Signup(c context.Context, input AuthInput) (*string, error) {
@@ -44,11 +48,16 @@ func (s *AuthService) Signup(c context.Context, input AuthInput) (*string, error
 		UpdatedAt: now,
 	}
 
-	if err := s.repo.Create(c, &user); err != nil {
+	if err := s.ur.Create(c, &user); err != nil {
 		return nil, err
 	}
 
-	token, err := GenerateToken(user.ID)
+	session, err := s.ss.Create(c, user.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	token, err := GenerateToken(user.ID, session.Token)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +69,7 @@ func (s *AuthService) Login(c context.Context, input AuthInput) (*string, error)
 	email := strings.ToLower(strings.TrimSpace(input.Email))
 	password := strings.TrimSpace(input.Password)
 
-	user, err := s.repo.GetByEmail(c, email)
+	user, err := s.ur.GetByEmail(c, email)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +78,12 @@ func (s *AuthService) Login(c context.Context, input AuthInput) (*string, error)
 		return nil, err
 	}
 
-	token, err := GenerateToken(user.ID)
+	session, err := s.ss.Create(c, user.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	token, err := GenerateToken(user.ID, session.Token)
 	if err != nil {
 		return nil, err
 	}
