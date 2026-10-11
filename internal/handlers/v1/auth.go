@@ -53,15 +53,15 @@ func (h *AuthHandler) Signup(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie(
-		"session",
-		*token,
-		int(time.Now().Add(7*24*time.Hour).Unix()),
-		"/",
-		"",
-		false,
-		true,
-	)
+	c.SetCookieData(&http.Cookie{
+		Name:     "session_id",
+		Value:    *token,
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   false,
+		SameSite: http.SameSiteLaxMode,
+		MaxAge:   int(7 * 24 * time.Hour),
+	})
 
 	c.JSON(http.StatusCreated, gin.H{
 		"detail": "created",
@@ -106,15 +106,19 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie(
-		"session",
-		*token,
-		int(time.Now().Add(7*24*time.Hour).Unix()),
-		"/",
-		"",
-		false,
-		true,
-	)
+	c.SetCookieData(&http.Cookie{
+		Name:     "session_id",
+		Value:    *token,
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   false,
+		SameSite: http.SameSiteLaxMode,
+		MaxAge:   int(7 * 24 * time.Hour),
+	})
+
+	c.JSON(http.StatusOK, gin.H{
+		"detail": "logged in",
+	})
 }
 
 func RegisterAuthRoutes(r *gin.RouterGroup, repo *repositories.UserRepository) {
