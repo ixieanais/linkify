@@ -36,9 +36,9 @@ func (r *ProfileRepository) GetByID(c context.Context, id uuid.UUID) (*models.Pr
 	return &profile, nil
 }
 
-func (r *ProfileRepository) GetByUsername(c context.Context, username string) (*models.Profile, error) {
+func (r *ProfileRepository) GetByUsername(c context.Context, slug string) (*models.Profile, error) {
 	var profile models.Profile
-	if err := r.db.WithContext(c).First(&profile, "username = ?", username).Error; err != nil {
+	if err := r.db.WithContext(c).First(&profile, "slug = ?", slug).Error; err != nil {
 		return nil, err
 	}
 

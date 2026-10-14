@@ -62,7 +62,7 @@ func (h *ProfileHandler) Create(c *gin.Context) {
 
 	input := services.CreateProfileInput{
 		UserID:     userID,
-		Username:   req.Username,
+		Slug:       req.Slug,
 		Name:       req.Name,
 		Bio:        req.Bio,
 		AvatarURL:  req.AvatarURL,
@@ -86,7 +86,7 @@ func (h *ProfileHandler) Create(c *gin.Context) {
 
 	response := dto.ProfileResponse{
 		ID:         profile.ID,
-		Username:   profile.Username,
+		Slug:       profile.Slug,
 		Name:       profile.Name,
 		Bio:        profile.Bio,
 		AvatarURL:  profile.AvatarURL,
@@ -137,7 +137,7 @@ func (h *ProfileHandler) GetAll(c *gin.Context) {
 	for _, profile := range profiles {
 		response = append(response, dto.ProfileResponse{
 			ID:         profile.ID,
-			Username:   profile.Username,
+			Slug:       profile.Slug,
 			Name:       profile.Name,
 			Bio:        profile.Bio,
 			AvatarURL:  profile.AvatarURL,
@@ -189,7 +189,7 @@ func (h *ProfileHandler) Get(c *gin.Context) {
 
 	response := dto.ProfileResponse{
 		ID:         profile.ID,
-		Username:   profile.Username,
+		Slug:       profile.Slug,
 		Name:       profile.Name,
 		Bio:        profile.Bio,
 		AvatarURL:  profile.AvatarURL,
@@ -249,7 +249,7 @@ func (h *ProfileHandler) Update(c *gin.Context) {
 	input := services.UpdateProfileInput{
 		ID:         id,
 		UserID:     userID,
-		Username:   req.Username,
+		Slug:       req.Slug,
 		Name:       req.Name,
 		Bio:        req.Bio,
 		AvatarURL:  req.AvatarURL,

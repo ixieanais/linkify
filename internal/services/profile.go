@@ -16,7 +16,7 @@ type ProfileService struct {
 
 type CreateProfileInput struct {
 	UserID     uuid.UUID
-	Username   string
+	Slug       string
 	Name       string
 	Bio        *string
 	AvatarURL  *string
@@ -26,7 +26,7 @@ type CreateProfileInput struct {
 type UpdateProfileInput struct {
 	ID         uuid.UUID
 	UserID     uuid.UUID
-	Username   string
+	Slug       string
 	Name       string
 	Bio        *string
 	AvatarURL  *string
@@ -38,7 +38,7 @@ func NewProfileService(repo *repositories.ProfileRepository) *ProfileService {
 }
 
 func (s *ProfileService) Create(c context.Context, input CreateProfileInput) (*models.Profile, error) {
-	username := strings.TrimSpace(input.Username)
+	slug := strings.TrimSpace(input.Slug)
 	name := strings.TrimSpace(input.Name)
 
 	now := time.Now()
@@ -46,7 +46,7 @@ func (s *ProfileService) Create(c context.Context, input CreateProfileInput) (*m
 	profile := &models.Profile{
 		ID:         uuid.NewV4(),
 		UserID:     input.UserID,
-		Username:   username,
+		Slug:       slug,
 		Name:       name,
 		Bio:        input.Bio,
 		AvatarURL:  input.AvatarURL,
@@ -70,18 +70,18 @@ func (s *ProfileService) Get(c context.Context, id uuid.UUID) (*models.Profile, 
 	return s.repo.GetByID(c, id)
 }
 
-func (s *ProfileService) GetByUsername(c context.Context, username string) (*models.Profile, error) {
-	return s.repo.GetByUsername(c, username)
+func (s *ProfileService) GetByUsername(c context.Context, slug string) (*models.Profile, error) {
+	return s.repo.GetByUsername(c, slug)
 }
 
 func (s *ProfileService) Update(c context.Context, input UpdateProfileInput) error {
-	username := strings.TrimSpace(input.Username)
+	slug := strings.TrimSpace(input.Slug)
 	name := strings.TrimSpace(input.Name)
 
 	profile := &models.Profile{
 		ID:         input.ID,
 		UserID:     input.UserID,
-		Username:   username,
+		Slug:       slug,
 		Name:       name,
 		Bio:        input.Bio,
 		AvatarURL:  input.AvatarURL,

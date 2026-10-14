@@ -2,7 +2,7 @@ package dto
 
 type ProfileResponse struct {
 	BaseModel
-	Username   string  `json:"username"`
+	Slug       string  `json:"username"`
 	Name       string  `json:"name"`
 	Bio        *string `json:"bio"`
 	AvatarURL  *string `json:"avatar_url"`
@@ -10,7 +10,7 @@ type ProfileResponse struct {
 }
 
 type ProfileRequest struct {
-	Username   string  `json:"username" binding:"required,min=3"`
+	Slug       string  `json:"slug" binding:"required,min=3"`
 	Name       string  `json:"name" binding:"required,min=3"`
 	Bio        *string `json:"bio"`
 	AvatarURL  *string `json:"avatar_url"`
