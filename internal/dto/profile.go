@@ -2,7 +2,7 @@ package dto
 
 type ProfileResponse struct {
 	BaseModel
-	Slug       string  `json:"username"`
+	Slug       string  `json:"slug"`
 	Name       string  `json:"name"`
 	Bio        *string `json:"bio"`
 	AvatarURL  *string `json:"avatar_url"`
