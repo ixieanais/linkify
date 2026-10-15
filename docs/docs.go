@@ -719,6 +719,10 @@ const docTemplate = `{
     "definitions": {
         "linkify_internal_dto.BlockRequest": {
             "type": "object",
+            "required": [
+                "title",
+                "type"
+            ],
             "properties": {
                 "image": {
                     "type": "string"
@@ -774,6 +778,10 @@ const docTemplate = `{
         },
         "linkify_internal_dto.LinkRequest": {
             "type": "object",
+            "required": [
+                "image",
+                "url"
+            ],
             "properties": {
                 "image": {
                     "type": "string"
@@ -811,6 +819,11 @@ const docTemplate = `{
         },
         "linkify_internal_dto.ProfileRequest": {
             "type": "object",
+            "required": [
+                "background",
+                "name",
+                "slug"
+            ],
             "properties": {
                 "avatar_url": {
                     "type": "string"
@@ -822,10 +835,12 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 3
                 },
-                "username": {
-                    "type": "string"
+                "slug": {
+                    "type": "string",
+                    "minLength": 3
                 }
             }
         },
@@ -850,10 +865,10 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "updated_at": {
+                "slug": {
                     "type": "string"
                 },
-                "username": {
+                "updated_at": {
                     "type": "string"
                 }
             }

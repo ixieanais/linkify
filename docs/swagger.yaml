@@ -13,6 +13,9 @@ definitions:
         type: string
       url:
         type: string
+    required:
+    - title
+    - type
     type: object
   linkify_internal_dto.BlockResponse:
     properties:
@@ -43,6 +46,9 @@ definitions:
         type: boolean
       url:
         type: string
+    required:
+    - image
+    - url
     type: object
   linkify_internal_dto.LinkResponse:
     properties:
@@ -68,9 +74,15 @@ definitions:
       bio:
         type: string
       name:
+        minLength: 3
         type: string
-      username:
+      slug:
+        minLength: 3
         type: string
+    required:
+    - background
+    - name
+    - slug
     type: object
   linkify_internal_dto.ProfileResponse:
     properties:
@@ -86,9 +98,9 @@ definitions:
         type: string
       name:
         type: string
-      updated_at:
+      slug:
         type: string
-      username:
+      updated_at:
         type: string
     type: object
   linkify_internal_dto.UserRequest:
